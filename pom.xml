@@ -40,6 +40,11 @@
 		get every artifact through repo.jenkins-ci.org, which proxies all the
 		artifacts that we need
 	-->
+	<scm>
+		<connection>ssh</connection>
+		<developerConnection>shaibe</developerConnection>
+		<url>git@github.com:shaibe/template-workflows-jenkins-plugin.git</url>
+	</scm>
 	<repositories>
 		<repository>
 			<id>repo.jenkins-ci.org</id>
