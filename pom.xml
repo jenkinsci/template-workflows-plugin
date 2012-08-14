@@ -41,9 +41,9 @@
 		artifacts that we need
 	-->
 	<scm>
-		<connection>ssh</connection>
+		<connection>csm:git:ssh://gits@github.com:shaibe/template-workflows-jenkins-plugin.git</connection>
 		<developerConnection>shaibe</developerConnection>
-		<url>git@github.com:shaibe/template-workflows-jenkins-plugin.git</url>
+		<url>https://github.com/shaibe/template-workflows-jenkins-plugin.git</url>
 	</scm>
 	<repositories>
 		<repository>
