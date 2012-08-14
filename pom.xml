@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Template+Workflows+Plugin</url>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -34,16 +33,10 @@
 		</dependency>
 	</dependencies>
 
-
-
-	<!--
-		get every artifact through repo.jenkins-ci.org, which proxies all the
-		artifacts that we need
-	-->
 	<scm>
-		<connection>csm:git:ssh://gits@github.com:shaibe/template-workflows-jenkins-plugin.git</connection>
-		<developerConnection>shaibe</developerConnection>
-		<url>https://github.com/shaibe/template-workflows-jenkins-plugin.git</url>
+		<connection>csm:git:ssh://git@github.com:shaibe/template-workflows-jenkins-plugin.git</connection>
+		<developerConnection>csm:git:ssh://git@github.com:shaibe/template-workflows-jenkins-plugin.git</developerConnection>
+		<url>http://github.com/shaibe/template-workflows-jenkins-plugin.git</url>
 	</scm>
 	<repositories>
 		<repository>
