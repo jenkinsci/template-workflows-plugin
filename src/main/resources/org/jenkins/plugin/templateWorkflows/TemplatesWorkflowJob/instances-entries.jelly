@@ -1,0 +1,85 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <l:pane width="3" title="Associated Workflows:">
+
+    <j:forEach var="instance" items="${it.templateInstances}">
+      <j:set var="link" value="${rootURL}/${instance.name}/" />
+      <tr class="build-row">
+        <td nowrap="nowrap">
+          <img width="16" height="16" src="${rootURL}/images/16x16/orange-square.png" />
+          <a style="padding-left:5px;"
+          onclick="setTemplateInstanceName('${instance.instanceName}'); return false;"
+          href="${rootURL}/${it.url}configure">
+            ${instance.instanceName}
+          </a>
+        </td>
+         <td style="width:20px">
+         <input type="image" title="Delete workflow: '${instance.instanceName}' (jobs that were created by this workflow will be deleted)"
+                onclick="deleteInstance('${instance.instanceName}'); return false;"
+                size="16" src="${rootURL}/images/16x16/edit-delete.png"/>
+
+        </td>
+        <td style="width:20px">
+        <input type="image" title="Execute workflow: '${instance.instanceName}'"
+               onclick="executeInstance('${instance.instanceName}'); return false;"
+               size="16" src="${rootURL}/images/16x16/clock.gif"/>
+
+       </td>
+      </tr>
+    </j:forEach>
+  </l:pane>
+
+  <script>
+    function setTemplateInstanceName(instanceName) {
+    	var foo = <st:bind value="${it}"/>
+    	foo.setTemplateInstanceName(instanceName, function(t) {
+    		var res = t.responseObject();
+    		if (res.result == true) {
+    			 window.location.href = '${rootURL}/${it.url}configure';
+    		}
+    	})
+    }
+
+     function deleteInstance(instanceName) {
+
+    	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+        if (!is_chrome) {
+	    	var msg = "Are you sure you want to delete " + instanceName + "?";
+	        var agree=confirm(msg);
+			if (!agree) {
+				return false;
+			}
+        }
+
+    	var foo = <st:bind value="${it}"/>
+    	foo.deleteInstance(instanceName, function(t) {
+    		var res = t.responseObject();
+    		if (res.result == true) {
+    			notificationBar.show(instanceName + ' Deleted', notificationBar.INFO);
+    	    	setTimeout("notificationBar.hide();window.location.href = '${rootURL}/${it.url}configure'",3000);
+    		} else {
+    			notificationBar.show(res.msg, notificationBar.ERROR);
+				setTimeout("notificationBar.hide();",3000);
+				return false;
+    		}
+    	})
+    }
+
+     function executeInstance(instanceName) {
+
+     	var foo = <st:bind value="${it}"/>
+     	foo.executeWorkflow(instanceName, function(t) {
+     		var res = t.responseObject();
+     		if (res.result == true) {
+     			notificationBar.show(res.msg, notificationBar.OK);
+ 				setTimeout("notificationBar.hide();",3000);
+     		} else {
+     			notificationBar.show(res.msg, notificationBar.ERROR);
+ 				setTimeout("notificationBar.hide();",3000);
+ 				return false;
+     		}
+     	})
+     }
+
+
+  </script>
+</j:jelly>

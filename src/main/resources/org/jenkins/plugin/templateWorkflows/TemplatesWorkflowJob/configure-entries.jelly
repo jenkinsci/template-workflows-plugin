@@ -1,0 +1,183 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:sl="/hudson/plugins/copy_from_template">
+
+<f:entry>
+	<div id="loading" style=" background-color: #E4E4E4; font-size: 300%;height: 100%;opacity: 0.5;position: absolute;text-align: center; width: 80%;">LOADING</div>
+	<div id="template.templateName.header" style="font-weight:bold;">Please Select a Workflow Template:</div>
+	<select class="setting-input" name="template.templateName" id="template.templateName" onchange="refresh()">
+        	<j:forEach var="inst" items="${it.templateNames}">
+            	<f:option>${inst}</f:option>
+        	</j:forEach>
+    </select>
+	<div id="msg"></div>
+</f:entry>
+
+  <script>
+    function refresh() {
+    	var foo = <st:bind value="${it}"/>
+    	foo.refresh(document.getElementById('template.templateName').value, function(t) {
+    		document.getElementById('loading').style.visibility = 'hidden';
+      		document.getElementById('msg').innerHTML = t.responseObject().msg;
+    	})
+    }
+
+    function validateJobName(origName, newName) {
+
+    	var allow = document.getElementById('allow_exist_name').checked;
+
+    	var foo = <st:bind value="${it}"/>
+    	foo.validateJobName(newName, allow, function(t) {
+	    	var res = t.responseObject();
+
+	      	document.getElementById(origName + '.validation').setAttribute("class", res.cssClass)
+	      	document.getElementById(origName + '.validation').innerHTML = res.msg;
+	      	document.getElementById(origName + '.validation').style.visibility = 'visible';
+
+	      	return res.result;
+    	});
+    }
+
+    function validateTemplateName() {
+
+    	var t_name = document.getElementById('template.templateInstanceName').value;
+    	var foo = <st:bind value="${it}"/>
+    	foo.validateTemplateName(t_name, function(t) {
+	    	var res = t.responseObject();
+
+	    	if (res.result == false) {
+	      		document.getElementById('template.templateInstanceName.validation').setAttribute("class", "error")
+	      	} else {
+	      		document.getElementById('template.templateInstanceName.validation').setAttribute("class", "info")
+	      	}
+
+	      	document.getElementById('template.templateInstanceName.validation').innerHTML = res.msg;
+	      	document.getElementById('template.templateInstanceName.validation').style.visibility = 'visible';
+
+	      	return res.result;
+    	})
+    }
+
+    var myVar;
+	function refreshOnLoad() {
+		if ('${it.templateInstanceName}' == 'template.createNewTemplate') {
+			refresh();
+			clearInterval(myVar);
+		} else {
+			var templateName = document.getElementById('template.templateName');
+			var templateNameHeader = document.getElementById('template.templateName.header');
+			templateName.style.visibility = 'hidden';
+			templateNameHeader.style.visibility = 'hidden';
+			refresh();
+			clearInterval(myVar);
+		}
+	}
+	myVar = setInterval(function(){refreshOnLoad()},1000);
+
+
+    var hideBar;
+	function hideBottomSticker() {
+		if (document.getElementById('bottom-sticker') != null) {
+			var bottom_sticker = document.getElementById('bottom-sticker');
+    		bottom_sticker.style.visibility = 'hidden';
+		}
+		clearInterval(hideBar);
+	}
+	hideBar = setInterval(function(){hideBottomSticker()},100);
+
+	function validateCreate() {
+
+		validateTemplateName();
+		validateAllNames();
+
+		var temlpateNameValidation = document.getElementById('template.templateInstanceName.validation');
+		if (temlpateNameValidation.innerHTML != 'Valid name') {
+			notificationBar.show('Please Select a Valid Template Instance Name', notificationBar.ERROR);
+			setTimeout("notificationBar.hide();",3000);
+			return false;
+		}
+
+		var names = [];
+		var el = document.getElementsByTagName("*");
+		for(var i=0; i&lt;el.length; i++ ) {
+			var job_validation_element = el[i];
+  			if (job_validation_element.id.indexOf("validation") > 0) {
+  				if (job_validation_element.id == "template.templateInstanceName.validation") {
+  					continue;
+  				}
+
+  				var job_id = 'template.' + job_validation_element.id.replace(".validation","");
+  				var curr_job_name = document.getElementById(job_id).value;
+
+  				if (job_validation_element.innerHTML != 'Valid name') {
+  					if (job_validation_element.innerHTML != 'Using existing job defenition') {
+  						notificationBar.show('Please Select a Valid Job Names!', notificationBar.ERROR);
+  						setTimeout("notificationBar.hide();",3000);
+  						return false;
+  					}
+    			}
+
+  				for(var j=0; j&lt;names.length; j++ ) {
+    				if (curr_job_name == names[j]) {
+    					notificationBar.show('2 Jobs Cant Have the Same Name: ' + curr_job_name, notificationBar.ERROR);
+						setTimeout("notificationBar.hide();",3000);
+						return false;
+    				}
+    			}
+
+
+				names.push((document.getElementById(job_id)).value);
+    		}
+		}
+
+	}
+	function validateUpdate() {
+
+		var el = document.getElementsByTagName("*");
+		for(var i=0; i&lt;el.length; i++ ) {
+			var job_validation_element = el[i];
+  			if (job_validation_element.id.indexOf("template_job") == 0) {
+  				var jobName = job_validation_element.innerHTML;
+
+  				var foo = <st:bind value="${it}"/>
+  		    	foo.validateJobIsNotRunning(jobName, function(t) {
+  		    		var res = t.responseObject();
+  		    		if (res.result == false) {
+  		    			notificationBar.show(res.msg, notificationBar.ERROR);
+  						setTimeout("notificationBar.hide();",3000);
+  						return false;
+  		    		}
+  		    	})
+    		}
+		}
+		return true;
+	}
+
+
+	function validateAllNames() {
+
+		var result = true;
+
+		var el = document.getElementsByTagName("*");
+		for(var i=0; i&lt;el.length; i++ ) {
+			var job_validation_element = el[i];
+  			if (job_validation_element.id.indexOf("validation") > 0) {
+  				if (job_validation_element.id == "template.templateInstanceName.validation") {
+  					continue;
+  				}
+
+  				var orig_job_name = job_validation_element.id.replace(".validation","")
+  				var job_id = 'template.' + orig_job_name;
+  				var curr_job_name = document.getElementById(job_id).value;
+  				curr_res = validateJobName(orig_job_name, curr_job_name);
+
+  				if (!curr_res) {
+  					result = false;
+  				}
+    		}
+		}
+
+		return result;
+	}
+
+  </script>
+</j:jelly>

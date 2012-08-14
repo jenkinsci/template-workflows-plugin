@@ -1,0 +1,8 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:sl="/hudson/plugins/copy_from_template">
+  <f:optionalBlock name="template-project" title="Mark as a Building Block for a Template Workflow" checked="${!empty(instance.templateName)}">
+      <f:entry title="Template Name" field="templateName">
+    <f:textbox />
+  </f:entry>
+  </f:optionalBlock>
+</j:jelly>

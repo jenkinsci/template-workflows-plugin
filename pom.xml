@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<url>https://wiki.jenkins-ci.org/display/JENKINS/Template+Workflows+Plugin</url>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jenkins-ci.plugins</groupId>
+		<artifactId>plugin</artifactId>
+		<version>1.477</version>
+	</parent>
+
+	<name>Template Workflows</name>
+	<groupId>org.jenkins.plugin.templateWorkflows</groupId>
+	<artifactId>template-workflows</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>hpi</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>12.0-rc1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.3</version>
+		</dependency>
+	</dependencies>
+
+
+
+	<!--
+		get every artifact through repo.jenkins-ci.org, which proxies all the
+		artifacts that we need
+	-->
+	<repositories>
+		<repository>
+			<id>repo.jenkins-ci.org</id>
+			<url>http://repo.jenkins-ci.org/public/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>repo.jenkins-ci.org</id>
+			<url>http://repo.jenkins-ci.org/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<developers>
+		<developer>
+			<id>shaib</id>
+			<name>Shai Ben-Hur</name>
+			<email>shai.bhur@gmail.com</email>
+		</developer>
+	</developers>
+
+</project>
