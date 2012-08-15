@@ -10,7 +10,7 @@
 	<name>Template Workflows</name>
 	<groupId>org.jenkins.plugin.templateWorkflows</groupId>
 	<artifactId>template-workflows</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<dependencies>
@@ -34,8 +34,8 @@
 	</dependencies>
 
 	<scm>
-		<connection>csm:git:ssh://git@github.com:shaibe/template-workflows-jenkins-plugin.git</connection>
-		<developerConnection>csm:git:ssh://git@github.com:shaibe/template-workflows-jenkins-plugin.git</developerConnection>
+		<connection>csm:git:ssh://git@github.com/jenkinsci/template-workflows-plugin.git</connection>
+		<developerConnection>csm:git:ssh://git@github.com/jenkinsci/template-workflows-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/template-workflows-plugin.git</url>
 	</scm>
 	<repositories>
