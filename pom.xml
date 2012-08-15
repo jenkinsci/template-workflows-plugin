@@ -7,6 +7,13 @@
 		<version>1.477</version>
 	</parent>
 
+	<distributionManagement>
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>
+
 	<name>Template Workflows</name>
 	<groupId>org.jenkins.plugin.templateWorkflows</groupId>
 	<artifactId>template-workflows</artifactId>
