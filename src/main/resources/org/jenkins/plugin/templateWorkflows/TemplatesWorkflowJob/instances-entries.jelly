@@ -1,12 +1,12 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <l:pane width="3" title="Associated Workflows:">
 
     <j:forEach var="instance" items="${it.templateInstances}">
       <j:set var="link" value="${rootURL}/${instance.name}/" />
       <tr class="build-row">
         <td nowrap="nowrap">
-          <img width="16" height="16" src="${rootURL}/images/16x16/orange-square.png" />
+          <l:icon src="symbol-timer-outline plugin-ionicons-api" />
           <a style="padding-left:5px;"
           onclick="setTemplateInstanceName('${instance.instanceName}'); return false;"
           href="${rootURL}/${it.url}configure">
@@ -16,13 +16,13 @@
          <td style="width:20px">
          <input type="image" title="Delete workflow: '${instance.instanceName}' (jobs that were created by this workflow will be deleted)"
                 onclick="deleteInstance('${instance.instanceName}'); return false;"
-                size="16" src="${rootURL}/images/16x16/edit-delete.png"/>
+                size="16" src="symbol-close-outline plugin-ionicons-api"/>
 
         </td>
         <td style="width:20px">
         <input type="image" title="Execute workflow: '${instance.instanceName}'"
                onclick="executeInstance('${instance.instanceName}'); return false;"
-               size="16" src="${rootURL}/images/16x16/clock.gif"/>
+               size="16" src="symbol-time-outline plugin-ionicons-api"/>
 
        </td>
       </tr>

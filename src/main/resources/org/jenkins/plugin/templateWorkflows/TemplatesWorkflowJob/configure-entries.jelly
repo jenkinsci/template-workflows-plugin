@@ -1,5 +1,5 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:sl="/hudson/plugins/copy_from_template">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
 
 <f:entry>
 	<div id="loading" style=" background-color: #E4E4E4; font-size: 300%;height: 100%;opacity: 0.5;position: absolute;text-align: center; width: 80%;">LOADING</div>
