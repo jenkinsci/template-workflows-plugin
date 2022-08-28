@@ -4,15 +4,9 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.477</version>
+		<version>4.46</version>
+		<relativePath />
 	</parent>
-
-	<distributionManagement>
-		<repository>
-			<id>maven.jenkins-ci.org</id>
-			<url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
-		</repository>
-	</distributionManagement>
 
 	<name>Template Workflows</name>
 	<groupId>org.jenkins.plugin.templateWorkflows</groupId>
@@ -21,44 +15,31 @@
 	<packaging>hpi</packaging>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>12.0-rc1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
-		</dependency>
 	</dependencies>
 
 	<scm>
-		<connection>csm:git:ssh://git@github.com/jenkinsci/template-workflows-plugin.git</connection>
+		<connection>scm:git:https://git@github.com/jenkinsci/template-workflows-plugin.git</connection>
 		<developerConnection>csm:git:ssh://git@github.com/jenkinsci/template-workflows-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/template-workflows-plugin.git</url>
 	</scm>
 	<repositories>
 		<repository>
 			<id>repo.jenkins-ci.org</id>
-			<url>http://repo.jenkins-ci.org/public/</url>
+			<url>https://repo.jenkins-ci.org/public/</url>
 		</repository>
 	</repositories>
 
 	<pluginRepositories>
 		<pluginRepository>
 			<id>repo.jenkins-ci.org</id>
-			<url>http://repo.jenkins-ci.org/public/</url>
+			<url>https://repo.jenkins-ci.org/public/</url>
 		</pluginRepository>
 	</pluginRepositories>
 
+	<properties>
+		<jenkins.version>2.346.1</jenkins.version>
+		<spotbugs.threshold>High</spotbugs.threshold>
+	</properties>
 
 	<developers>
 		<developer>

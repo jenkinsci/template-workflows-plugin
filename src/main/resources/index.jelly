@@ -1,4 +1,5 @@
+<?jelly escape-by-default='true'?>
 <div>
-	This plugin introduces the workflow concept.
+	This plugin introduces templates for workflows (pipelines).
 </div>
 
