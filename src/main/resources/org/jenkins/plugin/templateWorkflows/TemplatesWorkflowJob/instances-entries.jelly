@@ -6,7 +6,7 @@
       <j:set var="link" value="${rootURL}/${instance.name}/" />
       <tr class="build-row">
         <td nowrap="nowrap">
-          <l:icon src="symbol-timer-outline plugin-ionicons-api" />
+			<img width="16" height="16" src="${rootURL}/images/16x16/orange-square.png" />
           <a style="padding-left:5px;"
           onclick="setTemplateInstanceName('${instance.instanceName}'); return false;"
           href="${rootURL}/${it.url}configure">
@@ -16,13 +16,13 @@
          <td style="width:20px">
          <input type="image" title="Delete workflow: '${instance.instanceName}' (jobs that were created by this workflow will be deleted)"
                 onclick="deleteInstance('${instance.instanceName}'); return false;"
-                size="16" src="symbol-close-outline plugin-ionicons-api"/>
+				size="16" src="${rootURL}/images/16x16/edit-delete.png"/>
 
         </td>
         <td style="width:20px">
         <input type="image" title="Execute workflow: '${instance.instanceName}'"
                onclick="executeInstance('${instance.instanceName}'); return false;"
-               size="16" src="symbol-time-outline plugin-ionicons-api"/>
+			   size="16" src="${rootURL}/images/16x16/clock.gif"/>
 
        </td>
       </tr>

@@ -7,7 +7,7 @@
     <l:tasks>
       <l:isAdmin>
         <l:task icon="symbol-trash-outline plugin-ionicons-api" href="${rootURL}/${it.url}delete" title="Delete Project" />
-        <l:task icon="icon-settings-outline plugin-ionicons-api" onclick="setTemplateInstanceName('template.createNewTemplate'); return false;" href="${rootURL}/${it.url}configure" title="Create Workflow" />
+        <l:task icon="symbol-settings-outline plugin-ionicons-api" onclick="setTemplateInstanceName('template.createNewTemplate'); return false;" href="${rootURL}/${it.url}configure" title="Create Workflow" />
       </l:isAdmin>
       <st:include page="actions.jelly" />
     </l:tasks>
