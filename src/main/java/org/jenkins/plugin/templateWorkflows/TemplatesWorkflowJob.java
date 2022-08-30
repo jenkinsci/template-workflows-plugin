@@ -1,26 +1,21 @@
 package org.jenkins.plugin.templateWorkflows;
 
 import hudson.Extension;
-import hudson.XmlFile;
 import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Item;
 import hudson.model.ItemGroup;
-import hudson.model.Items;
 import hudson.model.Job;
-import hudson.model.Queue;
 import hudson.model.TopLevelItem;
 import hudson.model.TopLevelItemDescriptor;
 import hudson.model.ViewJob;
 import hudson.model.AbstractProject.AbstractProjectDescriptor;
 import hudson.model.Descriptor.FormException;
-import hudson.model.Queue.BuildableItem;
-import hudson.model.Queue.Task;
-import hudson.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -83,7 +78,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
     public Set<String> getTemplateNames() {
         Set<String> ret = new LinkedHashSet<String>();
 
-        List<Item> allItems = Jenkins.getInstance().getAllItems();
+        List<Item> allItems = Jenkins.get().getAllItems();
         for (Item i : allItems) {
             Collection<? extends Job> allJobs = i.getAllJobs();
             for (Job j : allJobs) {
@@ -99,8 +94,8 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
     }
 
     @Override
-    public Hudson getParent() {
-        return Hudson.getInstance();
+    public Jenkins getParent() {
+        return Jenkins.get();
     }
 
     @Override
@@ -108,13 +103,9 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
         templateName = req.getParameter("template.templateName");
         templateInstanceName = req.getParameter("template.templateInstanceName");
         String operation = req.getParameter("template.operation");
-        boolean isNew = false;
+        boolean isNew = operation.equals("create");
 
-        if (operation.equals("create")) {
-        	isNew = true;
-        }
-
-        //Validate on server side
+		//Validate on server side
         for (Job j : relatedJobs) {
             if (StringUtils.isBlank(req.getParameter("template." + j.getName()))) {
                 return;
@@ -157,25 +148,25 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
     	InputStream is = null;
 
     	try {
-    		is = new ByteArrayInputStream(jobXml.getBytes("UTF-8"));
+    		is = new ByteArrayInputStream(jobXml.getBytes(StandardCharsets.UTF_8));
 
     		Job replacedJob = null;
 
     		if (isNew) {
 
     			//check if job already exist
-    			Job job = (Job)Jenkins.getInstance().getItem(jobReplacedName);
+    			Job job = (Job)Jenkins.get().getItem(jobReplacedName);
     			if (job != null) {
     				return false;
     			}
 
-    			replacedJob = (Job)Jenkins.getInstance().createProjectFromXML(jobReplacedName, is);
+    			replacedJob = (Job)Jenkins.get().createProjectFromXML(jobReplacedName, is);
     			((Job)replacedJob).removeProperty(TemplateWorkflowProperty.class);
     			((Job)replacedJob).save();
     			return true;
 
     		} else {
-    			replacedJob = (Job)Jenkins.getInstance().getItem(jobReplacedName);
+    			replacedJob = (Job)Jenkins.get().getItem(jobReplacedName);
     			replacedJob.updateByXml(new StreamSource(is));
     			replacedJob.removeProperty(TemplateWorkflowProperty.class);
     			replacedJob.save();
@@ -208,7 +199,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 
         @Override
         public TopLevelItem newInstance(ItemGroup paramItemGroup, String paramString) {
-            return new TemplatesWorkflowJob(Hudson.getInstance(), paramString);
+            return new TemplatesWorkflowJob(Jenkins.get(), paramString);
         }
     }
 
@@ -230,12 +221,12 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 			TemplateWorkflowInstance templateInstance = templateInstances.get(workflowName);
 			for (String jobTenplateName : templateInstance.getRelatedJobs().keySet()) {
 
-				Job job = (Job)Jenkins.getInstance().getItem(jobTenplateName);
+				Job job = (Job)Jenkins.get().getItem(jobTenplateName);
 				TemplateWorkflowProperty t = (TemplateWorkflowProperty)job.getProperty(TemplateWorkflowProperty.class);
 				if (t.getIsStartingWorkflowJob()) {
 					String jobName = templateInstance.getRelatedJobs().get(jobTenplateName);
-					job = (Job)Jenkins.getInstance().getItem(jobName);
-					Jenkins.getInstance().getQueue().schedule((AbstractProject)job);
+					job = (Job)Jenkins.get().getItem(jobName);
+					Jenkins.get().getQueue().schedule((AbstractProject)job);
 					jobs +=  ",'" + jobName + "' ";
 					result = true;
 				}
@@ -266,7 +257,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 
     	for (String jobName : templateInstance.getRelatedJobs().values()) {
 
-    		Job job = (Job)Jenkins.getInstance().getItem(jobName);
+    		Job job = (Job)Jenkins.get().getItem(jobName);
     		if (job != null && job.isBuilding()) {
 				result = false;
 				msg = "Job " + job.getName() + " is Currently Building";
@@ -287,7 +278,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 		    			continue;
 		    		}
 
-					Job job = (Job)Jenkins.getInstance().getItem(jobName);
+					Job job = (Job)Jenkins.get().getItem(jobName);
 					if (job != null) {
 						job.delete();
 					}
@@ -319,7 +310,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
             result = false;
         }
 
-        List<Item> allItems = Jenkins.getInstance().getAllItems();
+        List<Item> allItems = Jenkins.get().getAllItems();
         for (Item i : allItems) {
         	Collection<? extends Job> allJobs = i.getAllJobs();
         	for (Job j : allJobs) {
@@ -359,7 +350,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 
     	String msg = "";
     	boolean result = true;
-    	AbstractProject job = (AbstractProject)Jenkins.getInstance().getItem(jobName);
+    	AbstractProject job = (AbstractProject)Jenkins.get().getItem(jobName);
 
     	if (job != null && job.isBuilding()) {
 			result = false;
@@ -422,7 +413,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
     		}
     	}
 
-    	boolean isNew = templateInstanceName.equals("template.createNewTemplate") ? true : false;
+    	boolean isNew = templateInstanceName.equals("template.createNewTemplate");
     	TemplateWorkflowInstance templateInstance = null;
 
         try {
@@ -451,7 +442,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
             	build.append("<span style=\"font-weight:bold;\">Workflow Name: '").append(templateInstanceName).append("'</span>");
             	build.append("<span> (Created From Template: '").append(templateInstance.getTemplateName()).append("')</span>");
             	build.append("</div>");
-            	build.append("<input type=\"hidden\" id=\"template.templateInstanceName\" name=\"template.templateInstanceName\" value=\"" + templateInstanceName + "\">");
+            	build.append("<input type=\"hidden\" id=\"template.templateInstanceName\" name=\"template.templateInstanceName\" value=\"").append(templateInstanceName).append("\">");
             }
 
             build.append("<div>&nbsp;</div>");
@@ -473,7 +464,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 	                build.append("<tr><td></td><td><div id =\"").append(j.getName()).append(".validation\" style=\"visibility: hidden;\"></div></td></tr>");
             	} else {
             		 String jobReplacedName = templateInstance.getRelatedJobs().get(j.getName());
-            		 String href = Jenkins.getInstance().getRootUrl() + "job/" + jobReplacedName;
+            		 String href = Jenkins.get().getRootUrl() + "job/" + jobReplacedName;
             		 build.append("<tr>").append(
 	                              "<td>").append(j.getName()).append(":&nbsp;</td>").append(
 	                              "<td style=\"width:300px;\">").append(
@@ -497,7 +488,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
             build.append("<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">");
             for (String p : jobParameters.keySet()) {
             	String value = jobParameters.get(p) != null ? jobParameters.get(p) : "";
-                build.append("<tr><td>"+p+":&nbsp;</td><td style=\"width:300px;\"><input name=\"template.").append(p).append("\"  class=\"setting-input\" value=\"").append(value).append("\" type=\"text\"/></td></tr>");
+                build.append("<tr><td>").append(p).append(":&nbsp;</td><td style=\"width:300px;\"><input name=\"template.").append(p).append("\"  class=\"setting-input\" value=\"").append(value).append("\" type=\"text\"/></td></tr>");
             }
             build.append("</table>");
             build.append("<div>&nbsp;</div>");
@@ -524,7 +515,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 
     private List<Job> getRelatedJobs(String templateName) {
     	List<Job> relatedJobs = new ArrayList<Job>();
-        List<Item> allItems = Jenkins.getInstance().getAllItems();
+        List<Item> allItems = Jenkins.get().getAllItems();
         for (Item i : allItems) {
             Collection<? extends Job> allJobs = i.getAllJobs();
             for (Job j : allJobs) {
