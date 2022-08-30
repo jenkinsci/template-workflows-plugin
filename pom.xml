@@ -10,7 +10,7 @@
 	<name>Template Workflows</name>
 	<groupId>org.jenkins.plugin.templateWorkflows</groupId>
 	<artifactId>template-workflows</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>${changelist}</version>
 	<packaging>hpi</packaging>
 	<url>https://wiki.jenkins-ci.org/display/JENKINS/Template+Workflows+Plugin</url>
 
@@ -18,6 +18,7 @@
 		<connection>scm:git:https://git@github.com/jenkinsci/template-workflows-plugin.git</connection>
 		<developerConnection>csm:git:ssh://git@github.com/jenkinsci/template-workflows-plugin.git</developerConnection>
 		<url>https://github.com/jenkinsci/template-workflows-plugin.git</url>
+		<tag>${scmTag}</tag>
 	</scm>
 	<repositories>
 		<repository>
@@ -44,6 +45,7 @@
 	<properties>
 		<jenkins.version>2.346.1</jenkins.version>
 		<spotbugs.threshold>High</spotbugs.threshold>
+		<changelist>999999-SNAPSHOT</changelist>
 	</properties>
 
 </project>
