@@ -33,10 +33,10 @@ import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
+import hudson.Util;
 
 public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,TemplateswWorkflowRun> implements TopLevelItem {
 
@@ -107,7 +107,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
 
 		//Validate on server side
         for (Job j : relatedJobs) {
-            if (StringUtils.isBlank(req.getParameter("template." + j.getName()))) {
+            if (Util.fixEmptyAndTrim(req.getParameter("template." + j.getName())) == null) {
                 return;
             }
         }
@@ -304,7 +304,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
         String msg = "Valid name";
         boolean result = true;
 
-        if (StringUtils.isBlank(newJobName)) {
+        if (Util.fixEmptyAndTrim(newJobName) == null) {
         	cssClass = "error";
             msg= "Job name can't be empty!";
             result = false;
@@ -374,7 +374,7 @@ public class TemplatesWorkflowJob extends ViewJob<TemplatesWorkflowJob,Templates
         boolean result = true;
         String msg = "Valid name";
 
-        if (StringUtils.isBlank(instanceNewName)) {
+        if (Util.fixEmptyAndTrim(instanceNewName) == null) {
             result = false;
             msg= "Workflow name can't be empty!";
         }
